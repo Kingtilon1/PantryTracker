@@ -13,7 +13,7 @@ export default function Home() {
       <Box className="box">
         <Box className = "wrapper">
           <Box className="pantry">
-            <Typography variant="h2" color = {'#333'} textAlign={'center'}>
+            <Typography variant="h2" color = {'#333'} textAlign={'center'} className="inter">
               Pantry Items
             </Typography>
           </Box>
@@ -21,7 +21,7 @@ export default function Home() {
           <Stack className="inside-stack" spacing={2}>
             {item.map((i) => (
               <Box key={i} className="item-container">
-                <Typography variant={"h3"} className="item">
+                <Typography variant={"h3"} className="item inter">
                   {i.charAt(0).toUpperCase() + i.slice(1)}
                 </Typography>
               </Box>
