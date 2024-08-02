@@ -12,10 +12,7 @@ import Popup from './Popup'
 
 
 export default function Home() {
-  const addItem = async (e) =>{
-    e.preventDefault()
   
-  }
   const [item, setItems] = useState([
     { name: "tomato", quantity: 10 },
     { name: "potato", quantity: 20 },
