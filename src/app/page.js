@@ -41,6 +41,12 @@ export default function Home() {
     }
   };
 
+  const handleDelete = (name) => {
+    const newlist = item.filter((val) => val.name !== name);
+    setItems(newlist)
+
+  }
+
   const handleInputChange = (event) => {
     setNewItemName(event);
   };
@@ -74,7 +80,7 @@ export default function Home() {
               <Typography variant="h3" className="quantity inter">
                 {i.quantity}
               </Typography>
-              <Button variant="outlined" startIcon={<DeleteIcon />} className="delete-button">
+              <Button variant="outlined" startIcon={<DeleteIcon />} className="delete-button" onClick = {() => handleDelete(i.name)}>
                 Delete
               </Button>
             </Box>
