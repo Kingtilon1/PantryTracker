@@ -17,6 +17,9 @@ export default function Popup(props) {
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevents the page from refreshing
     props.addItems(props.values) // Calls the addItem function with the current input value
+    props.setValues('')
+    console.log("hey",props.values)
+    handleClose()
   }
 
   return (

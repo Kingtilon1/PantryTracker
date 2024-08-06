@@ -3,48 +3,74 @@ import { Button, Box, Stack, Typography } from "@mui/material";
 
 import "./styles.css";
 import { useState, useEffect } from "react";
-import { collection, addDoc } from "firebase/firestore";
 import Popup from "./Popup";
-import DeleteIcon from '@mui/icons-material/Delete';
+import Search from "./Search";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { firestore } from "../firebase";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  setDoc,
+  addDoc,
+} from "firebase/firestore";
 
 export default function Home() {
-  const [item, setItems] = useState([
-    { name: "tomato", quantity: 10 },
-    { name: "potato", quantity: 20 },
-    { name: "cucumber", quantity: 15 },
-    { name: "lettuce", quantity: 8 },
-    { name: "cheese", quantity: 5 },
-    { name: "carrot", quantity: 12 },
-  ]);
+  const [inventory, setInventory] = useState([]);
 
   const [newItemName, setNewItemName] = useState("");
 
-  const addItems = () => {
-    const trimmedName = newItemName.trim(); 
-  
-    if (trimmedName !== "") {
-      setItems((prevItems) => {
-        const existingItemIndex = prevItems.findIndex(
-          (item) => item.name.toLowerCase() === trimmedName.toLowerCase()
-        );
-        if (existingItemIndex !== -1) {
-          return prevItems.map((item, index) =>
-            index === existingItemIndex
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          );
-        } else {
-          return [...prevItems, { name: trimmedName, quantity: 1 }];
-        }
+  const updateInventory = async () => {
+    const snapshot = query(collection(firestore, "items"));
+    const docs = await getDocs(snapshot);
+    const inventoryList = [];
+    docs.forEach((doc) => {
+      const data = doc.data()
+      inventoryList.push({
+        name: doc.id,
+        ...doc.data,
       });
-      setNewItemName(""); // Clear the input field
-    }
+    });
+    setInventory(inventoryList);
   };
+  // Use useEffect to fetch data on component mount
+  useEffect(() => {
+    updateInventory();
+  }, []);
 
-  const handleDelete = (name) => {
-    const newlist = item.filter((val) => val.name !== name);
-    setItems(newlist)
+  const addItems = async(item) => {
+    const docRef = doc(collection(firestore, 'items'), item)
+    const docSnap = await getDoc(docRef)
+    if(docSnap.exists()){
+      const {quantity} = docSnap.data()
+      await setDoc(docRef, {quantity: quantity+1})
+      
+    }else {
+      await setDoc(docRef, {quantity: 1})
+    }
+    await updateInventory()
+  }
 
+  const handleDelete = async(item) => {
+    const docRef = doc(collection(firestore, 'items'), item)
+    const docSnap = await getDoc(docRef)
+    
+    if(docSnap.exists()){
+      const {quantity} = docSnap.data()
+      if (quantity === 1){
+        await deleteDoc(docRef)
+
+      }
+      else {
+        await setDoc(docRef, {quantity: quantity-1})
+      }
+    }
+    await updateInventory()
   }
 
   const handleInputChange = (event) => {
@@ -54,6 +80,12 @@ export default function Home() {
   return (
     //Function that takes the data that is sent from the input box and calls state to
     <Box className="box">
+      < Search 
+      inventory = {inventory}
+      setinventory = {setInventory}
+      setValues = {handleInputChange}
+      setNewItemName = {setNewItemName}
+      />
       <Popup
         values={newItemName}
         addItems={addItems}
@@ -72,15 +104,20 @@ export default function Home() {
         </Box>
 
         <Stack className="inside-stack" spacing={2}>
-          {item.map((i) => (
-            <Box key={i.name} className="item-container">
+          {inventory.map(({name, quantity}) => (
+            <Box key={name} className="item-container">
               <Typography variant={"h3"} className="item inter">
-                {i.name.charAt(0).toUpperCase() + i.name.slice(1)}
+                {name.charAt(0).toUpperCase() + name.slice(1)}
               </Typography>
               <Typography variant="h3" className="quantity inter">
-                {i.quantity}
+                {quantity}
               </Typography>
-              <Button variant="outlined" startIcon={<DeleteIcon />} className="delete-button" onClick = {() => handleDelete(i.name)}>
+              <Button
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                className="delete-button"
+                onClick={() => handleDelete(name)}
+              >
                 Delete
               </Button>
             </Box>
