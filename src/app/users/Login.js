@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Alert, Button, Container, TextField, Typography, Box } from '@mui/material';
 import { useUserAuth } from '../../context/UserAuthContext';
-import Link from 'next/link'; // Import Next.js Link
-import GoogleButton from 'react-google-button'; // Assuming you're using this library
+import Link from 'next/link';
+import GoogleButton from 'react-google-button'; 
+import { trackEvent } from '../../utils/analytics'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,6 +18,12 @@ const Login = () => {
     setError('');
     try {
       await logIn(email, password);
+      trackEvent({
+        action: 'login',
+        category: 'User Authentication',
+        label: 'Login Successful',
+        value: 'Email/Password'
+    });
       router.push('/');
     } catch (err) {
       setError(err.message);
@@ -27,6 +34,12 @@ const Login = () => {
     e.preventDefault();
     try {
       await googleSignIn();
+      trackEvent({
+        action: 'login',
+        category: 'User Authentication',
+        label: 'Login Successful',
+        value: 'Google Sign-in'
+    });
       router.push('/');
     } catch (error) {
       setError(error.message);

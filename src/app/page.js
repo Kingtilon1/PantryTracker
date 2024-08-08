@@ -1,5 +1,4 @@
 "use client";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import {
   Box,
   Typography,
@@ -16,6 +15,8 @@ import {
   TextField,
 } from "@mui/material";
 
+import { trackEvent } from '../utils/analytics'
+import { sendGAEvent } from "@next/third-parties/google";
 import "./styles.css";
 import { useState, useEffect } from "react";
 import Popup from "./users/Popup";
@@ -73,6 +74,12 @@ export default function Home() {
     } else {
       await setDoc(docRef, { quantity: 1 });
     }
+    sendGAEvent({
+      action: 'add_item',
+      category: 'Inventory Management',
+      label: 'Add Item',
+      value: item
+  });
     await updateInventory();
   };
 
@@ -82,7 +89,12 @@ export default function Home() {
 
     if (docSnap.exists()) {
         await deleteDoc(docRef);
-     
+        sendGAEvent({
+          action: 'delete_item',
+          category: 'Inventory Management',
+          label: 'Delete Item',
+          value: item
+      });
     }
     // TODO: make it so user can edit each card individually 
     // Create some kind of ai implmentation by either having a llm describe the item in the list 
@@ -107,6 +119,12 @@ export default function Home() {
       await setDoc(newDocRef, { quantity: editQuantity });
       await deleteDoc(docRef);
     }
+    sendGAEvent({
+      action: 'edit_item',
+      category: 'Inventory Management',
+      label: 'Edit Item',
+      value: editName
+  });
     setOpenEditDialog(false);
     updateInventory();
   };
@@ -120,6 +138,12 @@ export default function Home() {
   const handleLogout = async () => {
     try {
       await logOut();
+      trackEvent({
+        action: 'logout',
+        category: 'User Authentication',
+        label: 'Logout',
+        value: 'User Logged Out'
+    });
     } catch (error) {
       console.error("Failed to log out", error);
     }

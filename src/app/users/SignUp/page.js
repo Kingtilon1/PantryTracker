@@ -5,6 +5,7 @@ import { Form, Alert } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import { useUserAuth } from '../../../context/UserAuthContext';
 import Link from 'next/link';
+import { trackEvent } from '../../../utils/analytics'
 import { Box, Typography, Container } from '@mui/material';
 
 export default function Signup() {
@@ -19,6 +20,12 @@ export default function Signup() {
     setError('');
     try {
       await signUp(email, password);
+      trackEvent({
+        action: 'signup',
+        category: 'User Authentication',
+        label: 'Signup Successful',
+        value: email  // Note: Be cautious with PII data
+    });
       router.push('/');
     } catch (err) {
       setError(err.message);

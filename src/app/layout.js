@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { UserAuthContextProvider } from "../context/UserAuthContext";
+import { GoogleAnalytics } from '@next/third-parties/google'
 const inter = Inter({
   subsets: ["latin"],
   weight: ["100"],
@@ -19,9 +20,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.variable}>
         <UserAuthContextProvider>
-          <SpeedInsights>{children}</SpeedInsights>
+          <>{children}</>
         </UserAuthContextProvider>
       </body>
+      <GoogleAnalytics gaId="G-XYZ" />
     </html>
   );
 }
+
+
