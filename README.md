@@ -72,7 +72,4 @@ Pantry Tracker is a web application designed to help users keep track of their p
 
 The application is deployed on Vercel. You can view it [here](https://pantry-tracker-g3821xpce-kingtilon1s-projects.vercel.app/).
 
-## License
-
-This project is licensed under the MIT License.
 
