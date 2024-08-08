@@ -8,6 +8,11 @@ import {
   CardActions,
   IconButton,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  TextField,
 } from "@mui/material";
 
 import "./styles.css";
@@ -15,6 +20,7 @@ import { useState, useEffect } from "react";
 import Popup from "./users/Popup";
 import Search from "./users/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit'; 
 import { firestore } from "../firebase";
 import ProtectedRoute from "./users/ProtectedRoute";
 import Login from "./users/Login";
@@ -33,8 +39,11 @@ import {
 export default function Home() {
   const { user, logOut } = useUserAuth();
   const [inventory, setInventory] = useState([]);
-
   const [newItemName, setNewItemName] = useState("");
+  const [editItem, setEditItem] = useState(null); // State for the item being edited
+  const [openEditDialog, setOpenEditDialog] = useState(false); // State to control edit dialog
+  const [editName, setEditName] = useState("");
+  const [editQuantity, setEditQuantity] = useState("");
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, "items"));
@@ -77,7 +86,28 @@ export default function Home() {
     // TODO: make it so user can edit each card individually 
     // Create some kind of ai implmentation by either having a llm describe the item in the list 
     //or having a phot upload option where the model recognizes the item and adds it to the list
+    // make a plus to add by one and a suibtract to change by one
     await updateInventory();
+  };
+
+  const handleEditClick = (item) => {
+    setEditItem(item);
+    setEditName(item.name);
+    setEditQuantity(item.quantity);
+    setOpenEditDialog(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const docRef = doc(collection(firestore, "items"), editItem.name);
+    await setDoc(docRef, { quantity: editQuantity });
+    if (editName !== editItem.name) {
+      const newDocRef = doc(collection(firestore, "items"), editName);
+      await setDoc(newDocRef, { quantity: editQuantity });
+      await deleteDoc(docRef);
+    }
+    setOpenEditDialog(false);
+    updateInventory();
   };
 
   const handleInputChange = (event) => {
@@ -199,6 +229,13 @@ export default function Home() {
                     </Typography>
                   </CardContent>
                   <CardActions>
+                  <IconButton
+                      color="primary"
+                      onClick={() => handleEditClick({name, quantity})}
+                      aria-label={`edit ${name}`}
+                    >
+                      <EditIcon />
+                    </IconButton>
                     <IconButton
                       color="error"
                       onClick={() => handleDelete(name)}
@@ -213,6 +250,46 @@ export default function Home() {
           </Box>
         </Box>
       </Box>
+
+      <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
+        <DialogTitle>Edit Item</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleEditSubmit}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              margin="dense"
+              label="Item Name"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              margin="dense"
+              label="Quantity"
+              type="number"
+              value={editQuantity}
+              onChange={(e) => setEditQuantity(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ width: '100%', padding: '10px 0', backgroundColor: '#6a11cb', '&:hover': { backgroundColor: '#2575fc' } }}
+            >
+              Save
+            </Button>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenEditDialog(false)} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ProtectedRoute>
   );
 }
