@@ -10,14 +10,14 @@ export default function Signup(){
   const [error, setError] = useState('');
   const [password, setPassword] = useState('');
   const { signUp } = useUserAuth();
-  const router = useRouter(); // Use useRouter from Next.js
+  const router = useRouter(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
       await signUp(email, password);
-      router.push('/'); // Use router.push for navigation
+      router.push('/'); 
     } catch (err) {
       setError(err.message);
     }
@@ -55,7 +55,7 @@ export default function Signup(){
         </Form>
       </div>
       <div className="p-4 box mt-3 text-center">
-        Already have an account? <Link href="/">Log In</Link> {/* Ensure href is correct */}
+        Already have an account? <Link href="/">Log In</Link> 
       </div>
     </>
   );

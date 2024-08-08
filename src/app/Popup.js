@@ -25,7 +25,7 @@ export default function Popup(props) {
   return (
     <div>
       <Button sx= {{mb:1}}variant="contained" color="primary" onClick={handleClickOpen}>
-        Open Popup
+        Add Items
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{"Add Item"}</DialogTitle>
