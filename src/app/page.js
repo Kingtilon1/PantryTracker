@@ -7,6 +7,7 @@ import {
   CardContent,
   CardActions,
   IconButton,
+  Button,
 } from "@mui/material";
 
 import "./styles.css";
@@ -30,7 +31,7 @@ import {
 } from "firebase/firestore";
 
 export default function Home() {
-  const { user } = useUserAuth();
+  const { user, logOut } = useUserAuth();
   const [inventory, setInventory] = useState([]);
 
   const [newItemName, setNewItemName] = useState("");
@@ -40,15 +41,15 @@ export default function Home() {
     const docs = await getDocs(snapshot);
     const inventoryList = [];
     docs.forEach((doc) => {
+      const data = doc.data();
       inventoryList.push({
         name: doc.id,
-        ...doc.data,
+        quantity: data.quantity,
       });
     });
     setInventory(inventoryList);
   };
- 
-  // Use useEffect to fetch data on component mount
+
   useEffect(() => {
     updateInventory();
   }, []);
@@ -70,13 +71,12 @@ export default function Home() {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const { quantity } = docSnap.data();
-      if (quantity === 1) {
         await deleteDoc(docRef);
-      } else {
-        await setDoc(docRef, { quantity: quantity - 1 });
-      }
+     
     }
+    // TODO: make it so user can edit each card individually 
+    // Create some kind of ai implmentation by either having a llm describe the item in the list 
+    //or having a phot upload option where the model recognizes the item and adds it to the list
     await updateInventory();
   };
 
@@ -86,14 +86,23 @@ export default function Home() {
   const filteredInventory = inventory.filter((item) =>
     item.name.toLowerCase().includes(newItemName.toLowerCase())
   );
+  const handleLogout = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.error("Failed to log out", error);
+    }
+  };
   if (!user) {
     return <Login />;
   }
+
   return (
     <ProtectedRoute>
       <Box
         sx={{
           minHeight: "100vh",
+          position: "relative",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -103,6 +112,22 @@ export default function Home() {
         }}
       >
         <Box
+          sx={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleLogout}
+            sx={{ alignSelf: "flex-end", mb: 2 }}
+          >
+            Logout
+          </Button>
+        </Box>
+        <Box
           className="box"
           sx={{
             p: 3,
@@ -111,9 +136,9 @@ export default function Home() {
             boxShadow: 5,
             maxWidth: 800,
             width: "100%",
-            maxHeight: "85vh", 
-            overflowX: 'hidden',
-            overflowY: 'auto'
+            maxHeight: "85vh",
+            overflowX: "hidden",
+            overflowY: "auto",
           }}
         >
           <Search newItemName={newItemName} setNewItemName={setNewItemName} />
@@ -126,18 +151,27 @@ export default function Home() {
             className="wrapper"
             sx={{ p: 2, backgroundColor: "#f5f5f5", borderRadius: 2 }}
           >
-            <Box className="pantry" sx={{ mb: 2 }}>
+            <Box
+              sx={{
+                mb: 4,
+                p: 2,
+                backgroundColor: "#6a11cb", // Use primary color for background
+                borderRadius: 2,
+                boxShadow: 3,
+                textAlign: "center",
+              }}
+            >
               <Typography
-                variant="h2"
-                color="primary"
-                textAlign="center"
+                variant="h4"
+                component="h2"
+                sx={{ color: "#fff", fontWeight: "bold" }}
                 gutterBottom
               >
                 Pantry Items
               </Typography>
             </Box>
 
-            <Stack className="inside-stack" spacing={2} >
+            <Stack className="inside-stack" spacing={2}>
               {filteredInventory.map(({ name, quantity }) => (
                 <Card
                   key={name}
@@ -148,8 +182,8 @@ export default function Home() {
                     p: 2,
                     borderRadius: 2,
                     boxShadow: 3,
-                    minHeight: '100px', // Set a fixed height for each item
-                    width: '95%', // Ensure it takes the full width available
+                    minHeight: "100px", // Set a fixed height for each item
+                    width: "95%", // Ensure it takes the full width available
                   }}
                 >
                   <CardContent sx={{ flex: 1 }}>
