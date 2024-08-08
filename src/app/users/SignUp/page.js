@@ -49,7 +49,7 @@ export default function Signup() {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#333' }}>
-          Tilon's Pantry Signup
+        Tilon&apos;s Pantry Signup
         </Typography>
 
         {error && <Alert variant="danger">{error}</Alert>}
