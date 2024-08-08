@@ -1,4 +1,4 @@
-"use client"; // Required for Next.js client-side components
+"use client";
 
 import React, { useState } from 'react';
 import { Button, Input, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';

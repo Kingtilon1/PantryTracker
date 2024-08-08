@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Alert, Button, Container, TextField, Typography, Box } from '@mui/material';
-import { useUserAuth } from '../context/UserAuthContext';
+import { useUserAuth } from '../../context/UserAuthContext';
 import Link from 'next/link'; // Import Next.js Link
 import GoogleButton from 'react-google-button'; // Assuming you're using this library
 
@@ -92,7 +92,7 @@ const Login = () => {
 
         <Box mt={2} textAlign="center">
           <Typography variant="body2">
-            Don't have an account? <Link href="/SignUp">Sign up</Link>
+            Don't have an account? <Link href="/users/SignUp">Sign up</Link>
           </Typography>
         </Box>
       </Box>

@@ -1,3 +1,7 @@
 .inter {
     font-family: var(--font--inter);
 }
+
+body {
+    margin: 0
+}

@@ -6,31 +6,27 @@ import {
   Card,
   CardContent,
   CardActions,
-  Button,
   IconButton,
 } from "@mui/material";
 
 import "./styles.css";
 import { useState, useEffect } from "react";
-import Popup from "./Popup";
-import Search from "./Search";
+import Popup from "./users/Popup";
+import Search from "./users/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { firestore } from "../firebase";
-import ProtectedRoute from "./ProtectedRoute";
-import Login from "./Login";
+import ProtectedRoute from "./users/ProtectedRoute";
+import Login from "./users/Login";
 
 import { useUserAuth } from "../context/UserAuthContext";
 import {
   collection,
   query,
-  where,
   getDocs,
-  updateDoc,
   deleteDoc,
   doc,
   getDoc,
   setDoc,
-  addDoc,
 } from "firebase/firestore";
 
 export default function Home() {
@@ -51,6 +47,7 @@ export default function Home() {
     });
     setInventory(inventoryList);
   };
+ 
   // Use useEffect to fetch data on component mount
   useEffect(() => {
     updateInventory();
@@ -92,7 +89,6 @@ export default function Home() {
   if (!user) {
     return <Login />;
   }
-
   return (
     <ProtectedRoute>
       <Box
@@ -120,7 +116,7 @@ export default function Home() {
             overflowY: 'auto'
           }}
         >
-          <Search searchTerm={newItemName} setSearchTerm={setNewItemName} />
+          <Search newItemName={newItemName} setNewItemName={setNewItemName} />
           <Popup
             values={newItemName}
             addItems={addItems}

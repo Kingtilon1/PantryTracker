@@ -63,7 +63,9 @@ body{
 
 
 
-
+.pantry {
+  color: black;
+}
   
   .input {
     width: 80%; 
