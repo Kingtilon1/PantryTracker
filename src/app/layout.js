@@ -1,10 +1,13 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { UserAuthContextProvider } from '../context/UserAuthContext';
-const inter = Inter({ subsets: ["latin"],
-  weight: ['100'],
-  variable: '--font--inter',
- });
+import { UserAuthContextProvider } from "../context/UserAuthContext";
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["100"],
+  variable: "--font--inter",
+});
+
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Create Next App",
@@ -14,11 +17,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.variable}> 
+      <body className={inter.variable}>
         <UserAuthContextProvider>
-          {children}
+          <SpeedInsights>{children}</SpeedInsights>
         </UserAuthContextProvider>
-        </body>
+      </body>
     </html>
   );
 }
