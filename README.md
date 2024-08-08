@@ -10,7 +10,8 @@ Pantry Tracker is a web application designed to help users keep track of their p
 - **Next.js**: The React framework used for building the front-end of the application.
 - **Firebase**: Used for authentication and Firestore as the database to store pantry items.
 - **Material-UI**: For designing the user interface components and styling.
-- **Vercel**: For deploying the application.
+- **Vercel**: For deploying the application. And for tracking performance metrics
+- **Google Analytics**: For tracking user interactions with components.
 
 ## Features
 
