@@ -92,7 +92,7 @@ const Login = () => {
 
         <Box mt={2} textAlign="center">
           <Typography variant="body2">
-            Don't have an account? <Link href="/users/SignUp">Sign up</Link>
+          Don&apos;t have an account? <Link href="/users/SignUp">Sign up</Link>
           </Typography>
         </Box>
       </Box>
