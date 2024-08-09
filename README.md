@@ -1,5 +1,5 @@
 ﻿# Pantry Tracker
- [View Live Here](https://pantry-tracker-g3821xpce-kingtilon1s-projects.vercel.app/)
+ [View Live Here](https://pantry-tracker-seven-iota.vercel.app/)
  
 
 ![Screenshot (259)](https://github.com/user-attachments/assets/640555e6-3d44-4d5a-b3fa-ae3d28fee0d1)
@@ -71,6 +71,6 @@ Pantry Tracker is a web application designed to help users keep track of their p
 
 ## Deployment
 
-The application is deployed on Vercel. You can view it [here](https://pantry-tracker-g3821xpce-kingtilon1s-projects.vercel.app/).
+The application is deployed on Vercel. You can view it [here](https://pantry-tracker-seven-iota.vercel.app/).
 
 
