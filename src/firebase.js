@@ -4,7 +4,7 @@ import {
   getAuth
 } from 'firebase/auth'
 const firebaseConfig = {
-  apiKey: "AIzaSyBZ7NgtqcxHIraSa49_KY84j9wfqJ0C5HU",
+  apiKey: "",
   authDomain: "pantrytracker-fd248.firebaseapp.com",
   projectId: "pantrytracker-fd248",
   storageBucket: "pantrytracker-fd248.appspot.com",
